@@ -1,0 +1,66 @@
+﻿@model OnlineShop.ViewModel.InShopView
+
+@{
+    ViewData["Title"] = "Delete";
+}
+<h2>Incoming products</h2>
+<h5>Delete Incoming product</h5>
+
+
+<h3 class="text-danger">Are you sure you want to delete this?</h3>
+<div>
+
+    <hr />
+    <h5 class="text-danger">@ViewBag.CntDel </h5>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PrdCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PrdCode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PrdName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PrdName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CatName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CatName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Qty)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Qty)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DateAdd)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateAdd)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Pic)
+        </dt>
+        <dd>
+            <img src="~/uploads/@Model.Pic" style="width:100px" class="img-thumbnail" />
+        </dd>
+
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="submit" value="Delete" class="btn btn-outline-danger" /> |
+        <a asp-action="Index" class="btn btn-info">Back to List</a>
+    </form>
+</div>

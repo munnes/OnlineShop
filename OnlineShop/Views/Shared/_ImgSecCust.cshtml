@@ -1,0 +1,11 @@
+﻿
+@model IEnumerable<OnlineShop.Models.SecondaryImg>
+@foreach (var item in Model)
+{
+<span>
+    @{ string id = "sec" + @item.ImgId.ToString();} 
+    <img src="~/uploads/secondryImg/@item.SecPic" style="height: 100px; margin-bottom:5px;position:relative;" class="img-thumbnail" onclick="ToggleImg('@id')" id='@id' />
+
+</span>
+}
+<script src="~/JSToggleImg.js"></script>

@@ -1,0 +1,72 @@
+﻿@model IEnumerable<OnlineShop.ViewModel.UsrTrans>
+
+@{
+    ViewData["Title"] = "Sent Items";
+}
+
+<h2>Sent Items</h2>
+
+<table class="table table-bordered table-hover  ">
+    <thead style="background-color: #30aabc;color: white">
+        <tr>
+            <th>Order#</th>
+            <th>Product</th>
+            <th>Product Picture</th>
+            <th>Quantity</th>
+            <th>Courier Name</th>
+            <th>Expected Arrive Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{   int i = 0;}
+        @foreach (var item in Model)
+        {
+          
+            <tr id='tr @i.ToString()'>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrdId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameId)
+                </td>
+                <td>
+                    <img src="~/uploads/@item.Pic" style="width:64px" class="img-thumbnail" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Qty)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourName)
+                </td>
+                <td>
+                    @Html.TextBoxFor(modelItem => item.ExpDate, "{0:MM/dd/yyyy}", new { id = "eDate" + i.ToString(),  @disabled = "disabled" })
+                   
+                   @{  i++;}
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <partial name="_Validation" />
+
+    <script type="text/javascript">
+          $(document).ready(function () {
+              var count = @Model.Count();
+
+              for (var i = 0; i < count; i++) {
+                  var iStr = i.toString();
+                  var expDate = document.getElementById("eDate" + iStr).value;
+                  var today = new Date();
+                  var date = expDate.split("-");
+                  var edate = new Date(date[2], date[0] - 1, date[1]);
+               
+                  if (edate.toLocaleDateString() < today.toLocaleDateString()) {
+                      document.getElementById("tr " + iStr).style.backgroundColor = "#e5352b";
+                  }
+              }
+         })
+    </script>
+}

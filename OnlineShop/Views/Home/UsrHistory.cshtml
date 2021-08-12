@@ -1,0 +1,83 @@
+﻿@model IEnumerable<OnlineShop.ViewModel.UsrTrans>
+
+@{
+    ViewData["Title"] = "UsrHistory";
+}
+
+<h2>Your Orders</h2>
+
+<hr />
+@if (Model.Count() != 0)
+{
+    @foreach (var item in Model)
+    {
+
+        <div class="card   mb-3 " style=" color:#eb0973">
+
+            <div class="card-header" style="color:#0081b4">
+
+                <div class="row">
+                    <div class="col-2">
+                        Order#:  @item.OrdId
+                    </div>
+                    <div class="col">
+                        Order Placed:<br />
+                        @item.ODate.ToShortDateString()
+                    </div>
+
+                    <div class="col">
+                        Price:<br />
+                        AED @item.Price
+                    </div>
+                    <div class="col">
+                        Shiped to:<br />
+                        @item.Customer
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-body ">
+                <h4 style="color:#29245c;font-style:italic">
+                    Delivered:
+                    @Html.DisplayFor(modelItem => item.RecDate, "{0:MM/dd/yyyy}")
+                </h4>
+
+                <br />        <div class="row">
+
+                    <div class="col-sm-12 col-md-4 col-lg-2  ">
+                        <img src="~/uploads/@item.Pic" style="width: 150px; margin-bottom:5px" class="img-thumbnail">
+                    </div>
+                    <div class="col-sm-12 col-md-8 col-lg-8 text-left">
+                        <h4 class="card-title ">@item.PrdName</h4>
+                        
+                     <h6>@Html.Raw("<style> #desc>:first-child{white-space: pre-wrap;}</style><div id='desc'>" + item.Description + "</div>")</h6>
+
+                        <a class="btn btn-success " href="~/Home/SinglePrd?prdId=@item.PrdId">
+                            <i class="fas fa-sync"></i>
+                            Buy Again
+                        </a>
+                    </div>
+                    <div class="col-sm-12 col-md-4 col-lg-2 ">
+                        <a class="btn btn-success " href="~/Home/Receipt?trkOut=@item.TrkOut">
+
+                            Order Details
+                        </a>
+
+                        <br />  <br />
+                        <a class="btn btn-success " href="~/Reviews/Create?trkOut=@item.TrkOut">
+
+                            &nbsp;Add Review&nbsp;
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }}
+else
+{
+    <h2 style="color:#eb0973;"> You didn't buy any product before.</h2>
+}
+
+

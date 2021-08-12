@@ -1,0 +1,152 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model OnlineShop.ViewModel.PayModelView
+@using Microsoft.Extensions.Options;
+@inject IOptions<OnlineShop.Classes.Data.StripeSettings> Stripe
+    <br />
+    <div class="text-center card" style="background-color:#29245c;color:white; width:70%;margin:0 auto;position:relative">
+
+        <script src="https://js.stripe.com/v3/"></script>
+        <div id="waitttAmazingLover" style="
+        display: none;
+        position: absolute;
+        vertical-align: middle;
+        z-index: 2;
+        top: 24%;
+        width: 100%;
+        margin: 0 auto;">
+            <img src="~/images/load.gif" style="margin: 0 auto;"/>
+        </div>
+        <form asp-action="Charge" asp-controller="Home" method="post" id="payment-form" class="container" >
+            <br />
+            <div style="font-size:40px; color:#ffd616 ">
+                <i class="fab fa-cc-visa"></i>&nbsp;&nbsp;
+                <i class="fab fa-cc-stripe"></i>&nbsp;&nbsp;
+                <i class="fab fa-cc-mastercard"></i>&nbsp;&nbsp;
+                <i class="fab fa-cc-amex"></i>
+            </div>
+
+            <div class="input-group mb-2 row">
+                <label for="card-number" class="col col-sm-12 col-md-12 col-lg-3">Credit Card Number</label>
+                <span id="card-number" class="form-control col col-sm-12  col-md-12 col-lg-6">
+                    <!--stripe card number-->
+                </span>
+            </div>
+
+            <div class="input-group mb-2 row">
+                <label for="card-cvc" class="col col-sm-12 col-md-12 col-lg-3">CVC Number</label>
+                <span id="card-cvc" class="form-control col col-sm-12  col-md-12 col-lg-6">
+                    <!--stripe cvc number-->
+                </span>
+            </div>
+
+            <div class="input-group mb-2 row">
+                <label for="card-exp" class="col col-sm-12 col-md-12 col-lg-3">Expiration</label>
+                <span id="card-exp" class="form-control col col-sm-12  col-md-12 col-lg-6">
+                    <!--stripe Expiration number-->
+                </span>
+            </div>
+            <input class="StripeToken" asp-for="Token" type="text" hidden />
+            <div class="input-group mb-2 row">
+                <label class="col col-sm-12 col-md-12 col-lg-3">Total</label>
+                <input asp-for="Total" class="form-control col col-sm-12  col-md-12 col-lg-6" value=@ViewBag.Total readonly />
+            </div>
+            <div class="input-group mb-2 row">
+                <label class="col col-sm-12 col-md-12 col-lg-3">Email</label>
+                <input asp-for="Email" type="email" class="form-control col col-sm-12  col-md-12 col-lg-6" value="@ViewBag.Email" readonly />
+            </div>
+            <!--Use to display form error -->
+            <div id="card-errors" role="alert" class="text-danger"></div>
+            <button type="submit" class="btn btn-danger">Pay</button>
+            <input asp-for="PrdId" value="@ViewBag.PrdId" hidden />
+            <input asp-for="Qty" value="@ViewBag.Qty" hidden />
+            <input asp-for="Price" value="@ViewBag.Price" hidden />
+            <input asp-for="IsHome" value="@ViewBag.IsHome" hidden />
+            <input asp-for="PrdName" value="@ViewBag.PrdName" hidden />
+            <br /><br />
+           <input value="@Stripe.Value.Publishablekey" hidden id="QStripe"/>
+        </form>
+
+    </div>
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            var stripe = Stripe(document.getElementById('QStripe').value);
+            var elements = stripe.elements();
+            var style = {
+                base: {
+                    'lineHeight': '1.35',
+                    'fontSize': '1.11rm',
+                    'color': '#495057',
+                }
+            };
+            //card
+            var card = elements.create('cardNumber', {
+                'placeholder': '',
+                'style': style
+            });
+            card.mount('#card-number')
+            //cvc
+            var cvc = elements.create('cardCvc', {
+                'placeholder': '',
+                'style': style
+            });
+            cvc.mount('#card-cvc')
+            //Expiry
+            var cvc = elements.create('cardExpiry', {
+                'placeholder': '',
+                'style': style
+            });
+            cvc.mount('#card-exp')
+            var form = document.getElementById('payment-form');
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                stripe.createToken(card).then(function (result) {
+                    if (result.error) {
+                        var errorElement = document.getElementById('card-errors');
+                        errorElement.textContent = result.error.message;
+                    }
+                    else {
+                        stripeTokenHandler(result.token)
+                        console.log(result.token)
+                        $(this).hide();
+                        $("#payment-form").show();
+                        $("#waitttAmazingLover").css("display", "block");
+                    }
+                });
+            });
+            function stripeTokenHandler(token) {
+                $('.StripeToken').val(token.id);
+                form.submit();
+            }
+        })
+    </script>
+
+
+
+
+
+
+
+    <!---------------------------------------------------------->
+    <!--<div class="text-center">
+        <form action="/Home/Charge" method="post">
+            <article>
+                amount: 5.00
+            </article>
+            <script src="//checkout.stripe.com/v2/checkout.js"
+                    class="stripe-button"
+                    data-key="@Stripe.Value.Publishablekey"
+                    data-locale="auto"
+                    data-description="Sample Charge"
+                    data-amount="500">
+
+            </script>
+
+        </form>
+    </div>
+        -->

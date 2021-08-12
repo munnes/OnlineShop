@@ -1,0 +1,93 @@
+﻿@model OnlineShop.Models.Reviews
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create Review</h2>
+
+<hr />
+<div>
+    <div class="row">
+        <div class="col-3">
+            <h4 style="color:#eb0973">@ViewBag.Prd</h4>
+            <img src="~/uploads/@ViewBag.Pic" style="width: 150px; margin-bottom:5px" class="img-thumbnail">
+        </div>
+        <div class="col-9">
+            <br /> <br />
+           @Html.Raw("<style> #desc>:first-child{white-space: pre-wrap;}</style><div id='desc'>" + @ViewBag.Desc + "</div>")
+
+        </div>
+    </div>
+
+</div>
+<style>
+    .str {
+        font-size: 30px;
+        color: #ffd616;
+    }
+
+        .str:hover {
+            color: white
+        }
+</style>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input name="PrdId" value="@ViewBag.PrdId" hidden />
+
+            <label>Overall rating</label>
+            <div class="form-group ">
+                <span class="fa fa-star btn str" id="str1" onclick="ToggelStar(1)"></span>
+                <span class="fa fa-star btn str" id="str2" onclick="ToggelStar(2)"></span>
+                <span class="fa fa-star btn str" id="str3" onclick="ToggelStar(3)"></span>
+                <span class="fa fa-star btn str" id="str4" onclick="ToggelStar(4)"></span>
+                <span class="fa fa-star btn str" id="str5" onclick="ToggelStar(5)"></span>
+                <input name="Stars" id="stars" value=5 hidden />
+                <span asp-validation-for="Stars" class="text-danger"></span>
+            </div>
+            <hr />
+            <div class="form-group">
+                <label asp-for="RHead" class="control-label"></label>
+                <input asp-for="RHead" class="form-control" placeholder="What most important to know?" />
+                <span asp-validation-for="RHead" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RText" class="control-label"></label>
+
+                @Html.TextAreaFor(modelItem => Model.RText, new { @class = "form-control", @placeholder = "What do you like or dislike?" })
+                <span asp-validation-for="RText" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-danger" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    
+    <a asp-controller= "Home" asp-action="UsrHistory"  class="btn btn-info">Back to List</a>
+</div>
+
+@section Scripts{
+    <partial name="_Validation" />
+
+    <script type="text/javascript">
+        function ToggelStar(x) {
+            for (var i = 1; i <= 5; i++) {
+                var iStr = i.toString();
+                if (i <= x) {
+                    document.getElementById("str" + iStr).style.color = "#ffd616";
+                }
+                else {
+                    document.getElementById("str" + iStr).style.color = "white";
+                }
+            }
+            document.getElementById("stars").value = + x;
+        }
+        </script>
+}

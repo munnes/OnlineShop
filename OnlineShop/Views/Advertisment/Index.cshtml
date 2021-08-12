@@ -1,0 +1,82 @@
+﻿@model IEnumerable<OnlineShop.ViewModel.AdvertismentView>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h2>Advertisment</h2>
+<h5>Index</h5>
+<hr/>
+<p>
+    <a asp-action="Create" class="btn btn-info">Create New</a>
+</p>
+<table class="table table-bordered table-hover  ">
+    <thead style="background-color: #30aabc;color: white">
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.CatName)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.NameId)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.AdvTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AdvTxt)
+            </th>
+            <th>
+
+                @Html.DisplayNameFor(model => model.Pic)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DTo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.CatName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AdvTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AdvTxt)
+                </td>
+                <td>
+                    @if (item.Pic != null)
+                    {
+                        <img src="~/uploads/@item.Pic" style="width:64px" class="img-thumbnail" />
+                    }
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DFrom)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DTo)
+                </td>
+
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.AdvId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.AdvId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.AdvId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,79 @@
+﻿@model IEnumerable<OnlineShop.ViewModel.InShopView>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Incoming products</h2>
+<h5>Index</h5>
+<hr/>
+<p>
+    <a asp-action="Create" class="btn btn-info">Create New</a>
+</p>
+
+
+@foreach (var group in Model.GroupBy(c => c.CatName))
+{
+    <div> <h3>@group.Key</h3></div>
+    <table class="table table-bordered table-hover  ">
+        <thead style="background-color: #30aabc;color: white">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.PrdCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PrdName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Qty)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateAdd)
+                </th>
+                <th>
+
+                    @Html.DisplayNameFor(model => model.Pic)
+                </th>
+                <th></th>
+
+            </tr>
+        </thead>
+        @foreach (var item in group)
+        {
+            <tbody>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PrdCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PrdName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Qty)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateAdd)
+                    </td>
+                    <td>
+                        @if (item.Pic != null)
+                        {
+                            <img src="~/uploads/@item.Pic" style="width:64px;" class="img-thumbnail" />
+                        }
+                    </td>
+
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Trk }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.Trk }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Trk })
+                    </td>
+                </tr>
+            </tbody>
+        }
+    </table>
+}

@@ -1,0 +1,28 @@
+﻿@model IEnumerable<OnlineShop.ViewModel.SecondaryImgView>
+
+
+@foreach (var group in Model.GroupBy(p=>p.PrdName))
+{
+<div class="card mb-3 " style="margin: 0 auto;">
+    <h4 class="card-header" style="color:#0081b4">@group.Key</h4>
+    <div class="card-body " style="margin: 0 auto;">
+        <div class="row text-center">
+            @foreach (var item in group)
+            {
+                <span style="margin-left:20px;margin-right:20px">
+                    <div class="row">
+                        <img src="~/uploads/secondryImg/@item.SecPic" style="height: 120px; margin-bottom:5px" class="img-thumbnail">
+                    </div>
+                    <div class="row">
+                        @Html.ActionLink("Edit", "Edit", new { id = item.ImgId }, new { @class = "btn btn-dark" })	&nbsp;	&nbsp;
+                        @Html.ActionLink("Delete", "Delete", new { id = item.ImgId }, new { @class = "btn btn-danger" })
+                    </div>
+                </span>
+            }
+        </div>
+    </div>
+</div>
+<br/>
+}
+
+  

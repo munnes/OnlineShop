@@ -1,0 +1,110 @@
+﻿@model OnlineShop.ViewModel.ProductInShopViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<h2>Incoming products</h2>
+<h5>Edit</h5>
+
+<hr />
+<h5 class="text-danger">@ViewBag.CntEdit </h5>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Trk" class="form-control" />
+
+            <div class="form-group">
+                <label asp-for="CatId" class="control-label">Categories</label>
+                @Html.DropDownListFor(model => model.CatId, new SelectList(Model.Categories, "CatId", "CatName"),
+    "...Please select category", new { @class = "form-control" })
+                <span asp-validation-for="CatId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PrdId" class="control-label">Products</label>
+                @Html.DropDownListFor(model => model.PrdId, new SelectList(" "), "...Please select Product", new { @class = "form-control" })
+                <span asp-validation-for="PrdId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Qty" class="control-label"></label>
+                <input asp-for="Qty" class="form-control" />
+                <span asp-validation-for="Qty" class="text-danger"></span>
+
+                <input asp-for="saveQty" hidden />
+
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateAdd" class="control-label"></label>
+                @Html.TextBoxFor(x => x.DateAdd, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date" })
+                <span asp-validation-for="DateAdd" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <img src="~/uploads/@Model.Pic" style="width:124px" class="img-thumbnail" />
+            </div>
+            <div class="form-group">
+                <label asp-for="File" class="control-label"></label>
+                <input type="file" asp-for="File" name="File" class="form-control" id="imgFile" />
+                <span asp-validation-for="File" class="text-danger"></span>
+                <div class="alert alert-danger" id="error-div" style="display:none">
+                    <span id="view-err">
+
+                    </span>
+                </div>
+            </div>
+
+            <input type="hidden" asp-for="Pic" class="form-control" />
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-outline-info" id="submit" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Index" class="btn btn-info">Back to List</a>
+</div>
+@section Scripts{
+    <partial name="_Validation" />
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            FillPrd(true);
+            $('#CatId').change(function () {
+
+                FillPrd(false)
+
+            });
+          
+
+        });
+
+        function FillPrd(ctrl) {
+              $.get("/PrdInShop/GetProducts/", { catId: $('#CatId').val() }, function (data) {
+
+               $('#PrdId').empty();
+               $('#PrdId').append("<option value=0>...Please select Product</option>")
+
+               $.each(data, function (index, row) {
+
+                   $('#PrdId').append("<option value='" + row.prdId + "'>" + row.nameId + "</option>")
+               });
+                  if (ctrl) {$('#PrdId').val('@Model.PrdId');}
+
+
+              });
+        }
+
+    </script>
+    <script src="~/JSUploadCtrl.js"></script>
+
+}

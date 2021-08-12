@@ -1,0 +1,181 @@
+﻿
+@model IEnumerable<OnlineShop.ViewModel.ReviewsView>
+<br />
+<style>
+    .score {
+        display: block;
+       font-size: 16px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .score-wrap {
+        display: inline-block;
+        position: relative;
+        /*  height: 19px;*/
+    }
+
+    .score .stars-active {
+        color: #EEBD01;
+        position: relative;
+        z-index: 10;
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .score .stars-inactive {
+        color: grey;
+        position: absolute;
+        top: 0;
+        left: 0;
+        -webkit-text-stroke: initial;
+        /* overflow: hidden; */
+    }
+
+    .bar-container {
+        width: 100%;
+        background-color: #dde2e0;
+        text-align: center;
+        height: 20px;
+        float: left
+    }
+
+</style>
+
+<div class="dl-horizontal text-left container jumbotron " style="width:100%; color:#9f1f5c;background-color:#f9fcfb">
+    <div class="row">
+        @{ var allStr = (from s in Model select s.Stars).ToList();
+            var total = allStr.Sum();
+            var numOfRev = Model.Count();
+            double exlCase = numOfRev * 5;
+            double prsntStr = total / exlCase;
+            var myWidth = prsntStr * 100;
+      
+            double totalVal = 5 * prsntStr;
+            var s1 = 0;
+            var s2 = 0;
+            var s3 = 0;
+            var s4 = 0;
+            var s5 = 0;}
+        <div class="col-lg-4">
+            <h3 style="color:#0081b4;font-style:italic">Customers Rates</h3>
+            <div class="row">
+                <div class="col">
+                    <span class="score">
+                        <span class="score-wrap">
+                            <span class="stars-active" style="width:@myWidth%">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            </span>
+                            <span class="stars-inactive">
+                                <i class="far fa-star" aria-hidden="true"></i>
+                                <i class="far fa-star" aria-hidden="true"></i>
+                                <i class="far fa-star" aria-hidden="true"></i>
+                                <i class="far fa-star" aria-hidden="true"></i>
+                                <i class="far fa-star" aria-hidden="true"></i>
+                            </span>
+                        </span>
+
+                    </span>
+                </div>
+                <div class="col" style="font-weight:bold">@Math.Round((double)totalVal, 2) out of 5</div>
+            </div>
+            <div> @numOfRev customers rates </div>
+<br/>
+            @*/*********************/*@
+            @{ foreach (var item in Model)
+                {
+                    if (item.Stars == 1) { s1++; }
+                    else if (item.Stars == 2) { s2++; }
+                    else if (item.Stars == 3) { s3++; }
+                    else if (item.Stars == 4) { s4++; }
+                    else if (item.Stars == 5) { s5++; }
+
+                }
+           
+
+                for (var i = 5; i > 0; i--)
+                {
+                    double s=0;
+
+                    if (i == 1)
+                    {
+                        s = s1;
+                    }
+                    else if (i == 2)
+                    {
+                        s = s2;
+                    }
+                    else if (i == 3)
+                    {
+                        s = s3;
+                    }
+                    else if (i == 4)
+                    {
+                        s = s4;
+                    }
+                    else if (i == 5)
+                    {
+                        s = s5;
+                    }
+
+                    double sPer = s / numOfRev;
+                    double barWid = sPer * 100;
+              
+                    <div class="row">
+                                    <div class="col-lg-3" >
+                                                @i Star
+                                    </div>
+                        <div class="col">
+                            <div class="bar-container" style="margin-top:3px" >
+                                <div class="bar" style="background-color:#ffd616;height:20px; width: @Math.Round((double)barWid, 2)%;"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            @Math.Round((double)barWid, 2)%
+                        </div>
+                    </div>
+                    <br />
+                    } }
+                </div>                           
+          
+                       
+        <div class="col-lg-8" style="border-left:solid">
+            <h3 style="color:#0081b4;font-style:italic">Customers Reviews</h3>
+            @foreach (var item in Model)
+            {
+                <div>
+                    <span style="font-size:25px;color:#29245c">  <i class="fas fa-user-check"></i></span>
+                    @item.FullName
+                </div>
+                <input name="Stars" id="star" value=@item.Stars hidden />
+                for (var i = 1; i <= 5; i++)
+                {
+                    if (i <= @item.Stars)
+                    {
+                        <span class="fa fa-star  str" style="color: #ffd616"></span>
+                    }
+                    else
+                    {
+                        <span class="fa fa-star  str" style="color: black"></span>
+                    }
+
+                }
+                /*************************/
+
+                /***/
+                <span style="font-weight:bold">  @item.RHead</span>
+                <div>@item.RevDate.ToShortDateString()</div>
+
+                <div>@item.RText</div>
+                <hr />
+            }
+        </div>
+    </div>
+</div>
+
+   

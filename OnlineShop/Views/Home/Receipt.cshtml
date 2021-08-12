@@ -1,0 +1,71 @@
+﻿@model OnlineShop.ViewModel.UsrTrans
+
+@{
+    ViewData["Title"] = "Receipt";
+}
+
+<h2>Receipt</h2>
+
+<div>
+
+    <hr />
+    <div class="card   mb-3 ">
+        <dl class="dl-horizontal container">
+
+            <h3 style="color:#eb0973">
+                @Html.DisplayFor(model => model.PrdName)
+            </h3>
+
+            <dd>
+               <img src="~/uploads/@Model.Pic" style="width: 150px; margin-bottom:5px" class="img-thumbnail">
+            </dd>
+
+            <dt>
+                Quantity
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Qty)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Price)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Price)
+            </dd>
+            <dt>
+                Order#
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.OrdId)
+            </dd>
+            <dt>
+                Customer Name
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Customer)
+            </dd>
+            <dt>
+                Courior Name
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.CourName)
+            </dd>
+            <dt>
+                Delivered Date
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.RecDate)
+            </dd>
+            <dt>
+                Customer Address
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.CustomerAddress)
+            </dd>
+        </dl>
+    </div>
+</div>
+    <div>
+
+        <a asp-action="UsrHistory"  class="btn btn-info">Back to List</a>
+    </div>

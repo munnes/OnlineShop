@@ -1,0 +1,194 @@
+﻿@model IEnumerable<OnlineShop.ViewModel.UsrTrans>
+
+@{
+    ViewData["Title"] = "ShoppingCart";
+}
+<div class="row">
+<div class="col col-lg-9 col-md-12 col-sm-12  text-center " style=" color:#eb0973; margin-top:10px">
+    <div class="card  mb-3">
+        <h2 class="card-header" style="color:#0081b4;">ShoppingCart</h2>
+        <div class="card-body ">
+            <h5 style="float:right;color:black">Price&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+            <br />
+            <hr />
+           
+             
+            @foreach (var item in Model)
+            {
+                <div class="row" style="align-items: center; display:flex;">
+                    <div class="col-sm-12 col-md-2 col-lg-1  ">
+                      
+                        <input type="checkbox" id=@item.PrdId.ToString() checked=@item.ActvOrd onclick="chk(@item.PrdId, @item.TrkOut)" />
+                                                                          
+                    </div>
+                    <div class="col-sm-12 col-md-4 col-lg-3 ">
+                        <img src="~/uploads/@item.Pic" style="width: 150px; margin-bottom:5px" class="img-thumbnail">
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6 text-left">
+
+                        <h5 class="card-title ">
+                            <span style="color:#0081b4">@item.PrdName</span>@Html.Raw("<style> #desc>:first-child{white-space: pre-wrap;}</style><span id='desc'>" + item.Description + "</span>")
+                        </h5>
+
+                        <div style="color:#e5352b" id='@item.PrdId.ToString()s'></div>
+
+                        <br />
+                        <label style="color:black">Qty: </label>
+                        <select asp-for="@item.Qty" class="selectpicker btn btn-light btn-sm" id='@item.TrkOut.ToString()q' style="width:80px;margin-top:5px;margin-bottom:5px;"
+                                onchange="editQty(@item.TrkOut,@item.PrdId,@item.Price,'@item.UsrId')">
+                            @for (var i = 1; i <= 10; i++)
+                            {
+                                <option>@i</option>
+                            }
+                        </select>
+
+                        <a href="@Url.Action("Delete", "Home", new { id = item.TrkOut })" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                    <div class="col-sm-12 col-md-2 col-lg-2">
+                        <span style="font-weight:bold;font-style:italic">@Html.DisplayFor(modelItem => item.Price) AED</span>
+
+                    </div>
+                </div>
+                <hr />
+               
+            }
+            <h5 style="float:right;font-style:italic;">
+                Subtotal(<span id="subQty"></span> items)
+                <span id="subTotal" style="font-weight: bold"></span>
+                <span style="font-weight: bold">AED</span>
+            </h5>
+
+        </div>
+    </div>
+</div>
+<div class="col col-lg-3 col-md-12 col-sm-12 card text-center  mb-3" style="color:#eb0973; margin-top:10px;height:50vh">
+   
+    <div class="card-body " style="margin-top:20px">
+
+        <h5 style="color:black">
+            Subtotal(<span id="sQty"></span> items)
+            <br />
+            <span id="sTotal" style="font-weight: bold"></span>
+            <span style="font-weight: bold">AED</span>
+        </h5>
+        <br />
+        <a class="btn btn-warning" id="buy" style="margin-bottom:5px;"
+            onclick="Purchase()">
+            <i class="fas fa-money-check-alt"></i>
+            Proceed to checkout
+        </a>
+        <div id="text"></div>
+    </div>
+</div>
+</div>
+        @section Scripts{
+            <partial name="_Validation" />
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $.get("/Home/GetInit/", function (data) {
+                        $.each(data, function (index, row) {
+                            $("#subQty").html(row.total)
+                            $("#subTotal").html(row.totalAmount.toFixed(2)) ;
+                            $("#sQty").html(row.total);
+                            $("#sTotal").html(row.totalAmount.toFixed(2)) ;
+                        });
+                    })
+                });
+
+                function Purchase() {
+                    var total = document.getElementById('subTotal').innerHTML;
+                    var allQty = document.getElementById('subQty').innerHTML;
+                    total = +total;
+                    allQty = +allQty
+                    location.assign("/Home/ChkOut?prdId=0 &qty=" + allQty + "&price=" + total + "&isHome=" + false);
+
+                }
+                function chk(prdId, trkOut) {
+                  
+                    var active = true;
+                    var prdStr = prdId.toString(); //chk
+                    if (document.getElementById(prdStr).checked == true) {
+                        active = true;
+                    }
+                    else {
+                        active = false;
+                                  }
+                  
+                    //***********************
+                    $.ajax({
+                        url: '/Home/ActivatePurchase/',
+                        type: 'post',
+                        data: {  actvOrd: active, trkOut},
+                        success: function (response) {
+                         //--------------
+                            $.get("/Home/GetInit/", function (data) {
+                                $.each(data, function (index, row) {
+                                    $("#subQty").html(row.total)
+                                    $("#subTotal").html(row.totalAmount.toFixed(2));
+                                    $("#sQty").html(row.total);
+                                    $("#sTotal").html(row.totalAmount.toFixed(2));
+                                });
+                            });
+                            //---------------
+                        }
+                    });
+                 
+                }
+
+                //----------------------------
+                function editQty(trkOut, prdId, price, usrId) {
+                    var prdStr = prdId.toString() + 's'//error msg
+                    var qryTrk = trkOut.toString() + 'q';//qty
+                    var newQty = document.getElementById(qryTrk).value;
+                    newQty = +newQty;
+                 
+                   $('#' + prdStr).empty();
+                  
+                    $.get("/Home/GetAvlQtyCart/", { prdId, usrId, newQty }, function (data) {
+                       
+                        $.each(data, function (index, row) {
+                         
+                        document.getElementById(prdStr).innerHTML = row.qtyTxt
+                                         //--------------------------
+                            if (row.avl) {
+                                
+                                var prdChk = prdId.toString();//chk
+                                var actvOrd = true;
+                                if (document.getElementById(prdChk).checked == false) { actvOrd = false }
+                             
+                             $.post("/Home/PurchaseOrder/", { prdId, qty: newQty, price, inCart: true, isChkOut: false, usrId, isHome: false, actvOrd });
+                              
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Home/RenderCart", //in asp.net mvc using ActionResult
+                                    //  data: data,
+                                    dataType: 'html',
+                                    success: function (result) {
+                                        //Your result is here
+                                        $("#crt").html(row.totalQty)        
+                                        var total = document.getElementById('subTotal').innerHTML;
+                                       
+                                        //bring active qty also and if checked 
+
+                                        if (document.getElementById(prdChk).checked == true) {
+                                          
+                                            var theTotal = +total - (row.usrQty * price) + (newQty * price);
+                                                //- row.usrQty + newQty;
+                                            document.getElementById('subQty').innerHTML = row.totalQtyActv;
+                                            document.getElementById('subTotal').innerHTML = theTotal.toFixed(2);
+                                            document.getElementById('sQty').innerHTML = row.totalQtyActv;
+                                            document.getElementById('sTotal').innerHTML = theTotal.toFixed(2);
+                                         
+                                        }
+                                    }
+                                });
+                            }
+                            //-------------------------
+                        });
+
+                    });
+
+                }
+            </script>
+        }

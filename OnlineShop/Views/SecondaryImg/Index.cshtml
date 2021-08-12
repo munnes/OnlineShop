@@ -1,0 +1,64 @@
+﻿
+@model OnlineShop.ViewModel.SecImgViewModel
+
+    <h2>Secondary Image</h2>
+    <h5>Index</h5>
+<hr/>
+    <p>
+        <a asp-action="Create" class="btn btn-info">Create New</a>
+    </p>
+    <div class="row">
+        <div class="col-1">Categories</div>
+        <div class="col">
+            @Html.DropDownListFor(model => model.CatId, new SelectList(Model.Category, "CatId", "CatName"), "...Please select category...", new { @class = "form-control", id = "CatId" })
+        </div>
+        <div class="col-1">Products</div>
+        <div class="col">
+            @Html.DropDownListFor(model => model.PrdId, new SelectList(" "), "...Please select Product...", new { @class = "form-control", id = "PrdId" })
+        </div>
+        <input type="button" class="btn btn-info" id="show" value="Show" />
+    </div>
+    <br />
+    <br />
+    <div class="row" id="showResults">
+
+    </div>
+
+
+    @section Scripts{
+        <partial name="_Validation" />
+        <script type="text/javascript">
+      $(document).ready(function () {
+            FillPrd(true);
+            $('#CatId').change(function () {
+                FillPrd(false)
+            });
+
+      });
+            //************************
+          var url = '@Url.Action("GetPhoto", "SecondaryImg")';
+            $('#show').click(function () {
+
+                var prd = $('#PrdId').val();
+
+                var cat = $('#CatId').val();
+
+    $('#showResults').load(url, {catId:cat , prdId:prd});
+})
+            //**************************
+             function FillPrd(ctrl) {
+               $.get("/SecondaryImg/GetProducts/", { catId: $('#CatId').val() }, function (data) {
+
+               $('#PrdId').empty();
+               $('#PrdId').append("<option value=0>...Please select Product...</option>")
+
+               $.each(data, function (index, row) {
+
+                   $('#PrdId').append("<option value='" + row.prdId + "'>" + row.nameId + "</option>")
+               });
+                  if (ctrl) {$('#PrdId').val('@Model.PrdId');}
+              });
+        }
+
+        </script>
+    }

@@ -1,0 +1,62 @@
+﻿@model OnlineShop.ViewModel.SecImgViewModel
+
+<h2>Secondary Image</h2>
+<h5>Edit</h5>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+
+        <form asp-action="Edit" enctype="multipart/form-data">
+
+            <input type="hidden" asp-for="PrdId" class="form-control" />
+            <input type="hidden" asp-for="CatId" class="form-control" />
+            <input type="hidden" asp-for="ImgId" class="form-control" />
+            <input type="hidden" asp-for="SecPic" class="form-control" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div style="font-weight:bold">
+                Category
+            </div>
+            <div class="form-group">
+                @ViewBag.CurCat
+            </div>
+            <div style="font-weight:bold">
+                Product
+            </div>
+            <div class="form-group">
+                @ViewBag.CurPrd
+            </div>
+            <div style="font-weight:bold">
+                Secondary Picture
+            </div>
+            <img src="~/uploads/secondryImg/@Model.SecPic" style="height: 300px; margin-bottom:5px" class="img-thumbnail">
+            <div class="form-group">
+                <div class="form-group">
+                    <div style="font-weight:bold">
+                        New Picture
+                    </div>
+                    <input type="file" asp-for="File" name="File" class="form-control" id="imgFile" />
+                    <span asp-validation-for="File" class="text-danger"></span>
+                    <div class="alert alert-danger" id="error-div" style="display:none">
+                        <span id="view-err">
+
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-outline-info" id="submit" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-info">Back to List</a>
+</div>
+
+@section Scripts{
+    <partial name="_Validation" />
+
+    <script src="~/JSUploadCtrl.js"></script>
+}

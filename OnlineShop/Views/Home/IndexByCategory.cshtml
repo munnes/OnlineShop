@@ -1,0 +1,106 @@
+﻿@model OnlineShop.ViewModel.AvailStockViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using OnlineShop.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "IndexByCategory";
+}
+
+@{var start = true;
+    var myQty = 0;
+    int isSign = 0;
+}
+@if (SignInManager.IsSignedIn(User))
+{
+    isSign = 1;
+}
+
+@foreach (var item in Model.AvailStock)
+{
+    if (start)
+    {
+        <h2 style="color:#0081b4">@Html.DisplayFor(modelItem => item.CatName)</h2>
+        <h5 style="color:#eb0973">
+
+            @Html.Raw("<style> #desc>:first-child{white-space: pre-wrap;color:#eb0973;}</style><div id='desc'>" + item.MainDesc + "</div>")
+        </h5>
+        <br />
+        start = false;
+    }
+
+    <div class="card text-center  mb-3 " style=" color:#eb0973">
+
+        <h4 class="card-header" style="color:#0081b4">@item.PrdName</h4>
+        <div class="card-body ">
+            <div class="row">
+
+                <div class="col-sm-12 col-md-4 col-lg-2  ">
+                    @{ string imgId = "main" + @item.PrdId.ToString();}
+                    <img src="~/uploads/@item.Pic" style="width: 150px; margin-bottom: 5px; position: relative;" class="img-thumbnail" onclick="ToggleImg('@imgId')" id='@imgId' />
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8 text-left">
+                    <h6 class="card-title ">@Html.Raw("<style> #desc>:first-child{white-space: pre-wrap;color:#eb0973;}</style><div id='desc'>" + item.Description + "</div>")</h6>
+                    <hr />
+                    <span style="font-weight:bold;font-style:italic">Price:    @Html.DisplayFor(modelItem => item.Price) AED</span>
+                    <div style="color:#e5352b" id='err @item.PrdId.ToString()'></div>
+                    <br />
+
+                    @{var PrdSecImg = (from sImg in Model.SecondaryImg where sImg.PrdId == item.PrdId select sImg).ToList();
+
+                        if (PrdSecImg.Count != 0)
+                        { @Html.Partial("_ImgSecCust", PrdSecImg)}
+                    }
+
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-2 ">
+                    <label style="color:black">Qty: </label>
+                    <select class="selectpicker btn btn-light btn-sm" id='@item.PrdId.ToString()s' data-style="btn-primary" style="width:80px;margin-top:10px;margin-bottom:5px;">
+                        @for (var i = 1; i <= 10; i++)
+                        {
+                            <option>@i</option>
+                        }
+                    </select>
+
+                    <br />
+
+                    <a class="btn btn-warning" style="margin-bottom:5px;"
+                       onclick="Purchase(@item.PrdId, @item.Price, true, false,@isSign,'@item.PrdName')">
+                        <i class="fas fa-shopping-cart"></i>
+                        Add to Cart
+                    </a>
+
+                    <a class="btn btn-warning" id="buy" style="margin-bottom:5px;"
+                       onclick="Purchase(@item.PrdId, @item.Price,false,true,'@isSign','@item.PrdName')">
+                        <i class="fas fa-money-check-alt"></i>
+                        &nbsp;&nbsp;Buy Now&nbsp;&nbsp;
+                    </a>
+                </div>
+            </div>
+            <br />
+            <div class="row container">
+            </div>
+            <div class="row">
+                @{var PrdReviews = (from rev in Model.ReviewsView where rev.PrdId == item.PrdId select rev).ToList();}
+                @{
+                    if (PrdReviews.Count != 0)
+                    { @Html.Partial("_ViewReviews", PrdReviews)}
+                }
+            </div>
+
+        </div>
+
+    </div>
+    myQty = item.AvlQty;
+
+}
+
+<a asp-action="Index" class="btn btn-info "><i class="fas fa-home"></i>Home</a>
+@section Scripts{
+    <partial name="_Validation" />
+    <script src="~/JSToggleImg.js"></script>
+    <script src="~/JSPrdCat.js"></script>
+
+}

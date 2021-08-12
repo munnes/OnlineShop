@@ -1,0 +1,10 @@
+https://www.youtube.com/watch?v=R_1OW8PyiRI
+services.AddAuthentication()
+    .AddMicrosoftAccount(microsoftOptions => { ... })
+    .AddGoogle(googleOptions => { ... })
+    .AddTwitter(twitterOptions => { ... })
+    .AddFacebook(facebookOptions => { ... });
+AIzaSyClY2x8R6yDLCcwaAwcgGorqTQ9kqGtVAY
+
+
+https://developers.google.com/identity/sign-in/web/sign-in

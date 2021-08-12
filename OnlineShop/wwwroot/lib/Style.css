@@ -1,0 +1,15 @@
+﻿body {
+    background-color: #dde2e0;
+ 
+ 
+}
+
+table {
+    background-color: #ffffff;
+   
+}
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}

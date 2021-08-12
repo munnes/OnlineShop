@@ -1,0 +1,57 @@
+﻿@model List<OnlineShop.ViewModel.RegisterViewModel>
+
+
+<h2>Queen Users</h2>
+<hr/>
+
+@foreach (var group in Model.OrderBy(r => r.Role).GroupBy(r => r.Role))
+{
+    <div> <h3>@group.Key</h3></div>
+    <table class="table table-bordered table-hover  ">
+        <thead style="background-color: #30aabc;color: white">
+            <tr>
+                <th>
+                    Full Name
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Phone Number
+                </th>
+                <th>
+                    Location
+                </th>
+ 
+            </tr>
+        </thead>
+     @* @for (var i = 0; i < group; i++)*@
+        @{var i = 0;}
+       @foreach (var item in group)
+
+       {
+        <tbody>
+            <tr>
+                <td>
+                    @item.FullName
+                </td>
+                <td>
+                    @item.Email
+                </td>
+                <td>
+                    @item.PhoneNumber
+                </td>
+                <td>
+                    @item.Location
+                </td>
+            </tr>
+        </tbody>
+        }
+    </table>
+}
+
+
+
+
+
+

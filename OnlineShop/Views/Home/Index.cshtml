@@ -1,0 +1,132 @@
+﻿<!--model IEnumerable<OnlineShop.ViewModel.AvailStock> -->
+@model OnlineShop.ViewModel.HomeViewModel;
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="1" class="active"></li>
+
+        @for (int i = 0; i < Model.AdvertismentView.Count(); i++)
+        {
+            int x = i + 2;
+            <li data-target="#myCarousel" data-slide-to=@x.ToString()></li>
+        }
+
+    </ol>
+    <div class="carousel-inner" role="listbox">
+
+        <div class="carousel-item card text-white mb-3 active advCard" style="background-color:#eb0973" >
+            <div class="card-header">To Beauty Queens</div>
+            <h5 class="container"> Welcome to your beauty home</h5>
+            <div class="card-body">
+                <div class="row container">
+                    <div class="col-sm-6  col-md-6 col-lg-4" style="text-align:right;">
+                        <img src="~/images/bQun.png"
+                             style="height: 180px;border-radius: 30%" />
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-7">
+                        <p class="card-text" style="font-size:16px">With Queen Products you are the queen of beauty. Shop the latest beauty products online </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @foreach (var item in Model.AdvertismentView)
+        {
+            <!-------------------------------->
+            <!-------------------------------->
+            <!-------------------------------->
+            <div class="carousel-item card text-white mb-3 advCard" >
+                <div class="card-header">@Html.DisplayFor(modelItem => item.AdvTitle)</div>
+                <h5 class="container"> @Html.DisplayFor(modelItem => item.PrdName)</h5>
+                <div class="card-body">
+                    <div class="row container">
+                        <div class="col-sm-6  col-md-6 col-lg-4" style="text-align:right;">
+                            <img src="~/uploads/@item.Pic"
+                                 style="height: 180px;border-radius: 30%" />
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-7">
+                            <p class="card-text" style="font-size:16px"> @Html.DisplayFor(modelItem => item.AdvTxt)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <a class="carousel-control-prev text-dark" href="#myCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon " aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+
+<!-------------------------------->
+<!-------------------------------->
+<!-------------------------------->
+
+
+<div class="row">
+
+    @foreach (var group in Model.AvailStock.GroupBy(c => c.CatName))
+    {
+        var counter = 4;
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card text-center  mb-3 " style=" color:#eb0973">
+
+                <h4 class="card-header" style="color:#0081b4">@group.Key</h4>
+                <div class="card-body ">
+                    <div class="row">
+
+                        @foreach (var item in group.Reverse())
+                        {
+                            counter = counter - 1;
+                            <a class="col-6 btn  " href="~/Home/SinglePrd?prdId=@item.PrdId">
+                                <img src="~/uploads/@item.Pic" style="width: 150px; margin-bottom:5px" class="img-thumbnail">
+                                <h5 class="card-title"> @Html.DisplayFor(modelItem => item.PrdName)</h5>
+                            </a>
+                            @if (counter == 0) { break; }
+
+                        }
+                    </div>
+
+                    @Html.ActionLink(" See more", "IndexByCategory", new { catName = group.Key }, new { @class = "btn btn-info fas fa-plus-circle" })
+
+                </div>
+
+            </div>
+        </div>
+
+    }
+</div>
+@section Scripts{
+    <partial name="_Validation" />
+
+    <script type="text/javascript">
+
+        //************************
+        function dsign() {
+            var clr = ['#9f1f5c', '#ef9020', '#e5352b', '#29245c', '#91be3en', '#39a6dd', '#e990ab'];
+            var idxCss = Math.floor(Math.random() * clr.length);
+            $(".advCard").css("background-color", clr[idxCss]);
+        }
+        $(document).ready(function () {
+           dsign();
+            $('.carousel-control-prev').click(function () {
+                dsign();
+            })
+            $('.carousel-control-next').click(function () {
+                dsign();
+            })
+            $('#myCarousel').bind('slide.bs.carousel', function (e) {
+             dsign()
+            });
+        })
+    </script>
+}
+
+

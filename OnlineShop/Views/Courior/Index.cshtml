@@ -1,0 +1,180 @@
+﻿
+@model OnlineShop.ViewModel.CarryViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Dispatch items</h2>
+<div style="position:relative">
+    <script src="https://js.stripe.com/v3/"></script>
+    <div id="waitttAmazingLover" style="
+        display: none;
+        position: absolute;
+        vertical-align: middle;
+        z-index: 2;
+        top: 24%;
+        width: 100%;
+        text-align:center;
+        margin: 0 auto;">
+        <img src="~/images/load.gif" style="margin: 0 auto; width:30%" />
+    </div>
+
+    @using (Html.BeginForm("Index", "Courior", FormMethod.Post, new { id = "formId" }))
+    {<table class="table table-bordered table-hover  ">
+            <thead style="background-color: #30aabc;color: white">
+                <tr>
+                    <th style="width:10px">Order#</th>
+                    <th>Product</th>
+                    <th>Product Picture</th>
+                    <th style="width:15px">Quantity</th>
+                    <th>Carry Status</th>
+                    <th>Courier</th>
+                    <th>Expected Arrive Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Purchases != null)
+                {
+
+                    for (int index = 0; index < Model.Purchases.Count(); index++)
+                    {
+
+                        @Html.HiddenFor(item => item.Purchases[index].TrkOut, new { @class = "form-control" });
+                        @Html.HiddenFor(item => item.Purchases[index].PrdId, new { @class = "form-control" });
+
+                        <tr id='tr @index.ToString()'>
+
+                            <td style="width:10px">
+                                @Html.TextBoxFor(item => item.Purchases[index].OrdId, new { @class = "form-control", @readonly = "true" })
+
+                            </td>
+                            <td>
+                                @Html.HiddenFor(item => item.Purchases[index].UsrId, new { @class = "form-control" })
+                                <span>  <input type="text" value="@Model.PurchaseView[index].NameId" disabled class="form-control" /></span>
+                            </td>
+                            <td>
+                                <img src="~/uploads/@Model.PurchaseView[index].Pic" style="width:64px" class="img-thumbnail" />
+                            </td>
+                            <td style="width:15px">
+                                @Html.TextBoxFor(item => item.Purchases[index].Qty, new { @class = "form-control", @readonly = "true" })
+
+                            </td>
+                            <td>
+                                @Html.DropDownListFor(item => item.Purchases[index].OrdStat, new SelectList(ViewBag.Status, "OrdStat", "StatName"), new { @class = "form-control", id = "stat" + index.ToString(), onchange = "Enable(" + @index.ToString() + ")" })
+                            </td>
+                            <td>
+                                @Html.DropDownListFor(item => item.Purchases[index].CurId, new SelectList(Model.CouriersView, "CurId", "CurName"),
+                       "...Please select Courier...", new { @class = "form-control", id = "curId" + index.ToString(), @disabled = "disabled" })
+                                <div id='cur @index.ToString()' class="text-danger"></div>
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(item => item.Purchases[index].ExpDate, new { type = "date", @class = "form-control", id = "eDate" + index.ToString(), @disabled = "disabled" })
+                                <div id='exp @index.ToString()' class="text-danger"></div>
+                            </td>
+                        </tr>
+                    }
+                }
+                <tr>
+                    <td colspan="7">
+                        <input type="submit" value="Confirm Send" class="btn btn-danger" id="btn" onclick="ChkSend(@Model.Purchases.Count())" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+</div>
+
+@section Scripts{
+    <partial name="_Validation" />
+
+    <script type="text/javascript">
+          $(document).ready(function () {
+              ValidationMsg(@ViewBag.All)
+
+            })
+            function ValidationMsg(count) {
+
+                for (var i = 0; i < count; i++) {
+                    var iStr = i.toString()
+                    var st = document.getElementById("stat" + iStr).value
+                    var cId = document.getElementById("curId" + iStr).value
+                    var expDate = document.getElementById("eDate" + iStr).value
+                    var today = new Date();// current date
+                    var edate = new Date(expDate);// convert string to date
+                    if (+st == 2) {
+                        if (cId == "") {
+                            document.getElementById("cur " + iStr).innerHTML = "Please select courior name!"
+                        }
+                        else if (expDate.trim() == "") {
+                            document.getElementById("exp " + iStr).innerHTML = "Please insert expected delivery date!"
+                        }
+                        else if (edate.toLocaleDateString() < today.toLocaleDateString()) {
+                            document.getElementById("exp " + iStr).innerHTML = "Sorry expected date cann't be less than current date!"
+                        }
+
+                       else {
+                            document.getElementById("tr " + iStr).style.backgroundColor = "#91be3e";
+                            document.getElementById("exp " + iStr).innerHTML = ""
+                            document.getElementById("cur " + iStr).innerHTML =""
+                        }
+                        document.getElementById("curId" + iStr.toString()).disabled = false;
+                        document.getElementById("eDate" + iStr).disabled = false;
+                    }
+                }
+
+            }
+            // post if can send when buton click
+            function ChkSend(count) {
+                var send = true;
+                for (var i = 0; i < count; i++) {
+                    var iStr = i.toString()
+                    var st = document.getElementById("stat" + iStr).value
+                    var cId = document.getElementById("curId" + iStr).value
+                    var expDate = document.getElementById("eDate" + iStr).value
+                    var today = new Date();
+                    var edate = new Date(expDate);
+                    if (+st == 2) {
+                        if (cId == "") {
+                            send = false;
+                            i = count;
+                        }
+                      if (expDate.trim() == "") {
+                          send = false;
+                          i = count;
+                        }
+                        if (edate.toLocaleDateString() < today.toLocaleDateString()) {
+                            send = false;
+                            i = count;
+                        }
+
+                    }
+                }
+                $.post("/Courior/CanSend/", { send })
+            
+                if (send) {
+                    document.forms['formId'].submit();
+                    $('html').animate({ scrollTop: 0 }, 'slow');
+                    $(this).hide();
+                    $("#formId").show();
+                    $("#waitttAmazingLover").css("display", "block");
+                }
+             
+        }
+        //***********************
+   
+            function Enable(i) {
+                var st = document.getElementById("stat" + i).value;
+                if (st == 2) {
+                    document.getElementById("curId" + i.toString()).disabled = false;
+                    document.getElementById("eDate" + i).disabled = false;
+                }
+                else if (st == 1){
+                    document.getElementById("curId" + i.toString()).disabled = true;
+                    document.getElementById("eDate" + i).disabled = true;
+
+                }
+            }
+
+    </script>
+}

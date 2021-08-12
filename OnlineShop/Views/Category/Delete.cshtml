@@ -1,0 +1,35 @@
+﻿@model OnlineShop.Models.Category
+
+@{
+    ViewData["Title"] = "Delete";
+}
+<h2>Category</h2>
+<h5>Delete Category</h5>
+
+<h3 class="text-danger">Are you sure you want to delete this?</h3>
+<div>
+
+    <hr />
+    <h5 class="text-danger">@ViewBag.CntDel </h5>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CatName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CatName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.mainDesc)
+        </dt>
+        <dd>
+            @Html.Raw("<style> #desc>:first-child{white-space: pre-wrap;}</style><div id='desc'>" + Model.mainDesc + "</div>")
+
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="CatId" />
+        <input type="submit" value="Delete" class="btn btn-outline-danger" /> |
+        <a asp-action="Index" class=" btn btn-info">Back to List</a>
+    </form>
+</div>

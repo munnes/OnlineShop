@@ -1,0 +1,36 @@
+﻿@using OnlineShop.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+
+
+<div class="container-fluid">
+    <!-- Sidebar -->
+    <div class="row min-vh-100 flex-column flex-md-row min-vw-100">
+        <div class="col-md-6 col-sm-12 col-lg-2" p-0 bg-dark flex-shrink-1">
+            <nav class="navbar navbar-expand  flex-md-column flex-row align-items-start py-2">
+              
+                <div class="collapse navbar-collapse ">
+                    <ul class="flex-column navbar-nav w-100 justify-content-between">
+                        <li class="nav-item">
+                            <a asp-page="./Index" class="nav-link pl-0 text-nowrap"><span class="font-weight-bold">Profile</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link pl-0" id="change-password" asp-page="./ChangePassword"><span class=" d-md-inline">Password</span></a>
+
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link pl-0" asp-page="./PersonalData"><span class="d-md-inline">Personal data</span></a>
+                        </li>
+                        <li class="nav-item">
+                          <a href='javascript:history.go(-1)' class="btn btn-info">Go Back</a>
+                      </li>
+
+                    </ul>
+                </div>
+            </nav>
+            
+        </div>
+    </div>
+</div>

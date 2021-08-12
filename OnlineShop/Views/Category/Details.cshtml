@@ -1,0 +1,33 @@
+﻿@model OnlineShop.Models.Category
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div>
+    <h2>Category</h2>
+    <h5>Details</h5>
+    <hr />
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CatName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CatName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.mainDesc)
+        </dt>
+        <dd>
+            @Html.Raw("<style> #desc>:first-child{white-space: pre-wrap;}</style><div id='desc'>" + Model.mainDesc + "</div>")
+
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.CatId" class=" btn btn-outline-info">Edit</a> |
+    <a asp-action="Index" class=" btn btn-info">Back to List</a>
+</div>

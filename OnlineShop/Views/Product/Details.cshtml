@@ -1,0 +1,45 @@
+﻿@model OnlineShop.ViewModel.PrdByCat
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div>
+    <h2>Product</h2>
+    <h5>Details</h5>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CatName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CatName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PrdCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PrdCode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PrdName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PrdName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd >
+            @Html.Raw("<style> #desc>:first-child{white-space: pre-wrap;}</style><div id='desc'>" + Model.Description + "</div>")
+        </dd>
+
+    </dl>
+</div>
+<div id="t"></div>
+
+<div>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PrdId }, new { @class = " btn btn-outline-info" }) |
+    <a asp-action="Index" class="btn btn-info">Back to List</a>
+</div>
+

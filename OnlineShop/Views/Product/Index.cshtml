@@ -1,0 +1,48 @@
+﻿@model IEnumerable<OnlineShop.ViewModel.PrdByCat>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Product</h2>
+<h5>Index</h5>
+<hr/>
+<p>
+    <a asp-action="Create" class="btn btn-info">Create New</a>
+</p>
+@foreach (var group in Model.GroupBy(c => c.CatName))
+{
+    <div> <h3>@group.Key</h3></div>
+    <table class="table table-bordered table-hover  ">
+        <thead style="background-color: #30aabc;color: white">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.PrdCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PrdName)
+                </th>
+                <th></th>
+
+            </tr>
+        </thead>
+        @foreach (var item in group)
+        {
+            <tbody>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PrdCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PrdName)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.PrdId }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.PrdId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.PrdId })
+                    </td>
+                </tr>
+            </tbody>
+        }
+    </table>
+}

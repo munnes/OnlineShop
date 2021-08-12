@@ -1,0 +1,90 @@
+﻿@model OnlineShop.ViewModel.ProductAdvViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Advertisment</h2>
+<h5>Create New Advertisment</h5>
+<hr />
+<div class="row ">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="CatId" class="control-label">Categories</label>
+                @Html.DropDownListFor(model => model.CatId, new SelectList(Model.Categories, "CatId", "CatName"), "...Please select category", new { @class = "form-control" })
+                <span asp-validation-for="CatId" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="PrdId" class="control-label">Products</label>
+                @Html.DropDownListFor(model => model.PrdId, new SelectList(" "), "...Please select Product", new { @class = "form-control" })
+                <span asp-validation-for="PrdId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdvTitle" class="control-label"></label>
+                @Html.TextBoxFor(model => model.AdvTitle, new { @class = "form-control" })
+                <span asp-validation-for="AdvTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdvTxt" class="control-label"></label>
+                @Html.TextAreaFor(model => model.AdvTxt, new { @class = "form-control" })
+                <span asp-validation-for="AdvTxt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DFrom" class="control-label"></label>
+                @Html.TextBoxFor(x => x.DFrom, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date" })
+
+                <span asp-validation-for="DFrom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DTo" class="control-label"></label>
+                @Html.TextBoxFor(x => x.DTo, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date" })
+
+                <span asp-validation-for="DTo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-outline-info" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-info">Back to List</a>
+</div>
+
+@section Scripts{
+    <partial name="_Validation" />
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            FillPrd(true);
+            $('#CatId').change(function () {
+
+                FillPrd(false)
+
+            });
+   });
+        function FillPrd(ctrl) {
+            $.get("/Advertisment/GetProducts/", { catId: $('#CatId').val() }, function (data) {
+
+               $('#PrdId').empty();
+               $('#PrdId').append("<option value=0>...Please select Product</option>")
+
+               $.each(data, function (index, row) {
+
+                   $('#PrdId').append("<option value='" + row.prdId + "'>" + row.nameId + "</option>")
+               });
+                  if (ctrl) {$('#PrdId').val('@Model.PrdId');}
+
+
+              });
+        }
+
+    </script>
+
+}
